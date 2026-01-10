@@ -3,6 +3,13 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
+#include <memory>
+
+namespace dai 
+{
+  class Device;
+  class DataOutputQueue;
+}
 
 struct Detection
 {
@@ -28,4 +35,8 @@ class OakInterface
 
   private:
     //internal handles
+    std::unique_ptr<dai::Device> device_;
+    std::shared_ptr<dai::DataOutputQueue> rgbQueue_;
+    std::shared_ptr<dai::DataOutputQueue> depthQueue_;
+    std::shared_ptr<dai::DataOutputQueue> detQueue_;
 };
