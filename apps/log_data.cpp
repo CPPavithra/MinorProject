@@ -5,15 +5,13 @@ using namespace std;
 int main()
 {
   OakInterface oak;
-  if(!oak,start())
+  if(!oak.start())
   {
     cerr<<"Failed to start oak device\n";
     return -1;
   }
-
   DataLogger logger("data");
   int frame_id=0;
-
   while(true)
   {
     FrameData frame;
@@ -22,5 +20,6 @@ int main()
       continue;
     }
     logger.logFrame(frame, frame_id++);
+    if (frame_id > 100) break;
   }
 }
