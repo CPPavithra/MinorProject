@@ -1,42 +1,28 @@
-#pragma once
+#ifndef OAK_INTERFACE_HPP
+#define OAK_INTERFACE_HPP
 
 #include <opencv2/opencv.hpp>
-#include <string>
-#include <vector>
-#include <memory>
+#include <depthai/depthai.hpp>
 
-namespace dai 
-{
-  class Device;
-  class DataOutputQueue;
-}
-
-struct Detection
-{
-  std::string label;
-  float confidence;
-  float x,y,z;
+struct FrameData {
+    cv::Mat rgb;
+    cv::Mat depth;
+    double timestamp;
 };
 
-struct FrameData
-{
-  double timestamp;
-  cv::Mat rgb;
-  cv::Mat depth;
-  std::vector<Detection>detections;
-};
+class OakInterface {
+public:
+    OakInterface() = default;
+    ~OakInterface() = default;
 
-class OakInterface 
-{
-  public:
-    OakInterface();
     bool start();
-    bool getFrame(FrameData &frame);
+    bool getFrame(FrameData& frame);
+    void stop();
 
-  private:
-    //internal handles
-    std::unique_ptr<dai::Device> device_;
-    std::shared_ptr<dai::DataOutputQueue> rgbQueue_;
-    std::shared_ptr<dai::DataOutputQueue> depthQueue_;
-    std::shared_ptr<dai::DataOutputQueue> detQueue_;
+private:
+    dai::Pipeline pipeline_;
+    std::shared_ptr<dai::MessageQueue> rgbQueue_; //for the newest version of depthai in my laptop 3.1.2
+    std::shared_ptr<dai::MessageQueue> depthQueue_;
 };
+
+#endif // OAK_INTERFACE_HPP
