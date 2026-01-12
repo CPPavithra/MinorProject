@@ -1,13 +1,17 @@
-#pragma once
+#ifndef DATA_LOGGER_HPP
+#define DATA_LOGGER_HPP
 
-#include "perception/oak_interface.hpp"
 #include <string>
+#include <opencv2/opencv.hpp>
+#include "perception/oak_interface.hpp"
 
-class DataLogger
-{
-  public:
-    DataLogger(const std::string& base_path); 
+class DataLogger {
+public:
+    explicit DataLogger(const std::string& base_path);
     void logFrame(const FrameData& frame, int frame_id);
-  private:
+
+private:
     std::string base_path;
 };
+
+#endif
