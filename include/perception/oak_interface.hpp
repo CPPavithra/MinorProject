@@ -4,11 +4,20 @@
 #include <opencv2/opencv.hpp>
 #include <depthai/depthai.hpp>
 
+
+struct Detection {
+    std::string label;
+    float confidence;
+    float x, y, z;
+};
+
 struct FrameData {
     cv::Mat rgb;
     cv::Mat depth;
     double timestamp;
+    std::vector<Detection> detections;
 };
+
 
 class OakInterface {
 public:
