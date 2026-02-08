@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread> // Add this for sleep
 #include <chrono> // Add this for sleep
+#include "visualization/rerun_viz.hpp"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ int main()
 {
   OakInterface oak;
   std::cout << "Starting OAK device..." << std::endl;
+
   if(!oak.start())
   {
     cerr << "Failed to start oak device\n";
@@ -18,6 +20,7 @@ int main()
   std::cout << "OAK started. Initializing logger..." << std::endl;
   
   DataLogger logger("data");
+  RerunViz viz;
   int frame_id = 0;
   
   std::cout << "Waiting for first frame (this may take 1-2 mins for model compilation)..." << std::endl;
@@ -36,8 +39,11 @@ int main()
     
     // Once we get a frame, print a new line
     std::cout << "\nLogging frame " << frame_id << std::endl;
-    logger.logFrame(frame, frame_id++);
-    
+   if(oak.getFrame(frame)) {
+    logger.logFrame(frame, frame_id);
+    viz.logFrame(frame);
+    frame_id++;
+   }
     if (frame_id > 100) break;
   }
   
