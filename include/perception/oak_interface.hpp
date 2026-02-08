@@ -11,6 +11,8 @@ struct Detection {
     std::string label;
     float confidence;
     float x, y, z;
+    float xmin, ymin;       // bbox
+    float xmax, ymax;
 };
 
 struct FrameData {

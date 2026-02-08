@@ -104,20 +104,30 @@ bool OakInterface::getFrame(FrameData& frame) {
 
     frame.detections.clear();
 
-    for(const auto& d : detMsg->detections) {
-        Detection det;
-        if (!labelMap_.empty() && d.label < labelMap_.size()) {
-            det.label = labelMap_[d.label];
-        } else {
-            det.label = std::to_string(d.label);
-        }
-        
-        det.confidence = d.confidence;
-        det.x = d.spatialCoordinates.x;
-        det.y = d.spatialCoordinates.y;
-        det.z = d.spatialCoordinates.z;
-        frame.detections.push_back(det);
+for(const auto& d : detMsg->detections) {
+    Detection det;
+
+    if (!labelMap_.empty() && d.label < labelMap_.size()) {
+        det.label = labelMap_[d.label];
+    } else {
+        det.label = std::to_string(d.label);
     }
+
+    det.confidence = d.confidence;
+
+    // -------- 3D spatial ----------
+    det.x = d.spatialCoordinates.x;
+    det.y = d.spatialCoordinates.y;
+    det.z = d.spatialCoordinates.z;
+
+    // -------- 2D bounding box ----------
+    det.xmin = d.xmin;
+    det.ymin = d.ymin;
+    det.xmax = d.xmax;
+    det.ymax = d.ymax;
+
+    frame.detections.push_back(det);
+}
 
     return true;
 }
