@@ -62,6 +62,8 @@ bool OakInterface::start() {
     rgbQueue_   = spatialDet->passthrough.createOutputQueue();
     depthQueue_ = spatialDet->passthroughDepth.createOutputQueue();
     detQueue_   = spatialDet->out.createOutputQueue();
+    leftQueue_  = leftOut->createOutputQueue();
+    rightQueue_ = rightOut->createOutputQueue();
 
     // Save classes if available
     if(spatialDet->getClasses().has_value()) {
@@ -89,6 +91,8 @@ bool OakInterface::getFrame(FrameData& frame) {
     auto rgbMsg   = rgbQueue_->get<dai::ImgFrame>();
     auto depthMsg = depthQueue_->get<dai::ImgFrame>();
 
+    auto leftMsg  = leftQueue_->get<dai::ImgFrame>();
+    auto rightMsg = rightQueue_->get<dai::ImgFrame>();
     // If pointers are null (shouldn't happen with get() unless pipeline stopped)
     if(!rgbMsg || !depthMsg || !detMsg) {
         return false;
@@ -97,6 +101,8 @@ bool OakInterface::getFrame(FrameData& frame) {
     // ---------- RGB + Depth ----------
     frame.rgb   = rgbMsg->getCvFrame();
     frame.depth = depthMsg->getCvFrame();
+    frame.left  = leftMsg->getCvFrame();   // <-- ADD THIS
+    frame.right = rightMsg->getCvFrame();  // <-- ADD THIS
 
     frame.timestamp = std::chrono::duration<double>(
         rgbMsg->getTimestamp().time_since_epoch()

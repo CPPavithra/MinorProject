@@ -19,6 +19,8 @@ struct FrameData {
     cv::Mat rgb;
     cv::Mat depth;
     double timestamp;
+    cv::Mat left;    // <-- ADD THIS (Grayscale)
+    cv::Mat right;   // <-- ADD THIS (Grayscale)
     std::vector<Detection> detections;
 };
 
@@ -38,6 +40,8 @@ private:
     std::shared_ptr<dai::MessageQueue> rgbQueue_; 
     std::shared_ptr<dai::MessageQueue> depthQueue_;
     std::shared_ptr<dai::MessageQueue> detQueue_;
+    std::shared_ptr<dai::MessageQueue> leftQueue_;  // <-- ADD THIS
+    std::shared_ptr<dai::MessageQueue> rightQueue_; // <-- ADD THIS
     
     std::vector<std::string> labelMap_;
 };
