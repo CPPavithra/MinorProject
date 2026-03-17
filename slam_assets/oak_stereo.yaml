@@ -1,0 +1,36 @@
+# slam_assets/oak_stereo.yaml
+Camera.name: "OAK-D-Lite Stereo"
+Camera.setup: "stereo"
+Camera.model: "perspective"
+
+# Standard OAK-D Lite 400p Intrinsics (We will extract your exact ones later if drift occurs)
+Camera.fx: 405.0
+Camera.fy: 405.0
+Camera.cx: 320.0
+Camera.cy: 200.0
+
+# Distortion parameters (OAK hardware undistorts for us usually, so we set to 0)
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+Camera.k3: 0.0
+
+Camera.fps: 30.0
+Camera.cols: 640
+Camera.rows: 400
+
+Camera.color_order: "Gray"
+
+# OAK-D Lite baseline is 7.5 cm (0.075 meters)
+Stereo.true_baseline: 0.075
+Stereo.b_right_x: -0.075
+Stereo.b_right_y: 0.0
+Stereo.b_right_z: 0.0
+
+# Tracking parameters
+Feature.max_num_keypoints: 1000
+Feature.scale_factor: 1.2
+Feature.num_scale_levels: 8
+Feature.ini_fast_threshold: 20
+Feature.min_fast_threshold: 7

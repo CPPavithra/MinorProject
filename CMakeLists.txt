@@ -12,6 +12,7 @@ find_package(depthai CONFIG REQUIRED)
 # 2. FIND THE PACKAGE (From your old project)
 # You were trying to link 'rerun_sdk' below without finding it first.
 find_package(rerun_sdk REQUIRED)
+find_package(stella_vslam REQUIRED)
 
 add_executable(log_data
     apps/log_data.cpp
@@ -33,4 +34,5 @@ target_link_libraries(log_data
     depthai::core
     ${OpenCV_LIBS}
     rerun_sdk
+    stella_vslam::stella_vslam
 )
