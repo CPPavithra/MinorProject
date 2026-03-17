@@ -22,6 +22,10 @@ struct FrameData {
     cv::Mat left;    // <-- ADD THIS (Grayscale)
     cv::Mat right;   // <-- ADD THIS (Grayscale)
     std::vector<Detection> detections;
+    bool pose_valid = false;
+    float pose_x = 0.0f;
+    float pose_y = 0.0f;
+    float pose_z = 0.0f;
 };
 
 class OakInterface {

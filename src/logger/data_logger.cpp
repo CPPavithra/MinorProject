@@ -17,7 +17,6 @@ DataLogger::DataLogger(const std::string& base_path)
     std::cout << "DataLogger initialized at: " << base_path << std::endl;
 }
 
-
 void DataLogger::logFrame(const FrameData& frame, int frame_id) {
 
     // ---------- RGB ----------
@@ -54,6 +53,18 @@ void DataLogger::logFrame(const FrameData& frame, int frame_id) {
         });
     }
 
+    // ---------- SLAM POSE ----------
+    if (frame.pose_valid) {
+        j["pose"] = {
+            {"x", frame.pose_x},
+            {"y", frame.pose_y},
+            {"z", frame.pose_z}
+        };
+    } else {
+        j["pose"] = nullptr; // Log null if tracking is lost or initializing
+    }
+
+    // ---------- SAVE TO DISK ----------
     std::string json_path =
         base_path + "/semantics/frame_" + std::to_string(frame_id) + ".json";
 
@@ -62,4 +73,3 @@ void DataLogger::logFrame(const FrameData& frame, int frame_id) {
 
     std::cout << "Saved frame " << frame_id << std::endl;
 }
-
