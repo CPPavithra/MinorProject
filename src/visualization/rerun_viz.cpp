@@ -25,6 +25,8 @@
 // Datatypes
 #include <rerun/datatypes/vec2d.hpp>
 
+#include "perception/slam_manager.hpp" // For RoverPose
+
 RerunViz::RerunViz() : rec_("oak_semantics_demo") {
     rec_.spawn().exit_on_failure();
 }
@@ -167,7 +169,7 @@ void RerunViz::logFrame(const FrameData& frame) {
     rec_.log("planning/map/robot", 
         rerun::Points2D({{0.0f, 0.0f}})
             .with_colors({{0xFFFFFFFF}}) // White dot
-            .with_radii({0.05f})
+            .with_radii({5.0f})
             .with_labels({"Me"})
     );
 
@@ -176,7 +178,7 @@ void RerunViz::logFrame(const FrameData& frame) {
             rerun::Points2D(map_points)
                 .with_colors(map_colors)
                 .with_labels(map_labels)
-                .with_radii({0.1f}) 
+                .with_radii({5.0f}) 
         );
     }
 
@@ -194,4 +196,20 @@ void RerunViz::logFrame(const FrameData& frame) {
 
     rec_.log("oak/info", rerun::TextDocument(ss.str())
         .with_media_type(rerun::components::MediaType::markdown()));
+}
+void RerunViz::logPose(const RoverPose& pose) {
+    if (!pose.valid) return;
+
+    // Add the new position to our trajectory history
+    trajectory_.push_back({pose.x, pose.y, pose.z});
+
+    // Use archetypes::LineStrips3D and pass it as a list of strips
+    rec_.log("slam/trajectory", 
+             rerun::archetypes::LineStrips3D({trajectory_}).with_colors({0x00FF00FF}));
+    
+    // Use archetypes::Points3D
+    rec_.log("slam/rover", 
+             rerun::archetypes::Points3D({{pose.x, pose.y, pose.z}})
+                 .with_radii({0.05f})
+                 .with_colors({0xFF0000FF}));
 }

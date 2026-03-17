@@ -1,5 +1,6 @@
 #include "perception/oak_interface.hpp"
 #include "logger/data_logger.hpp"
+#include "perception/slam_manager.hpp"
 #include <iostream>
 #include <thread> // Add this for sleep
 #include <chrono> // Add this for sleep
@@ -18,7 +19,13 @@ int main()
     return -1;
   }
   std::cout << "OAK started. Initializing logger..." << std::endl;
-  
+
+  SlamManager slam;
+    if(!slam.init("slam_assets/oak_stereo.yaml", "slam_assets/orb_vocab.fbow")) {
+        std::cerr << "SLAM Failed to start. Check file paths!" << std::endl;
+        return -1;
+    }
+
   DataLogger logger("data");
   RerunViz viz;
   int frame_id = 0;
@@ -42,6 +49,10 @@ int main()
    if(oak.getFrame(frame)) {
     logger.logFrame(frame, frame_id);
     viz.logFrame(frame);
+    RoverPose pose = slam.trackStereo(frame.left, frame.right, frame.timestamp);
+    if(pose.valid) {
+        viz.logPose(pose);
+    }
     frame_id++;
    }
     if (frame_id > 100) break;

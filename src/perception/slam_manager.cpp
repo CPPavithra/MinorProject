@@ -29,11 +29,16 @@ RoverPose SlamManager::trackStereo(const cv::Mat& left, const cv::Mat& right, do
     if(!slam_) return pose;
 
     // Feed the left/right grayscale images to the math engine
-    // It returns Tcw (Camera pose with respect to the World)
+    // It returns a shared_ptr to the camera pose with respect to the World
     auto Tcw = slam_->feed_stereo_frame(left, right, timestamp);
 
-    // We want Twc (World with respect to Camera) to plot the rover's position
-    Eigen::Matrix4d Twc = Tcw.inverse();
+    // SAFETY CHECK: If Tcw is null, tracking is lost or initializing.
+    if (!Tcw) {
+        return pose; // pose.valid is false
+    }
+
+    // Dereference the pointer (using ->) to do matrix math
+    Eigen::Matrix4d Twc = Tcw->inverse();
 
     // Extract X, Y, Z translation
     pose.x = Twc(0, 3);
@@ -43,7 +48,6 @@ RoverPose SlamManager::trackStereo(const cv::Mat& left, const cv::Mat& right, do
 
     return pose;
 }
-
 void SlamManager::stop() {
     if(slam_) {
         std::cout << "Shutting down SLAM engine..." << std::endl;

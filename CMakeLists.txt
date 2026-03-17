@@ -19,6 +19,7 @@ add_executable(log_data
     src/perception/oak_interface.cpp
     src/logger/data_logger.cpp
     src/visualization/rerun_viz.cpp
+    src/perception/slam_manager.cpp
 )
 
 target_include_directories(log_data
